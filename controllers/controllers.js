@@ -1,6 +1,5 @@
 const axios = require("axios");
 const Book = require("../models/сщштыs");
-const axios = require("axios");
 
 const url = "https://api.coingecko.com/api/v3/coins";
 
@@ -212,11 +211,9 @@ const getCoinByPriceChange7d = async (req, res) => {
 };
 
 module.exports = {
+  categoryList,
   getFullOverview,
-  getCoinByName,
-  getCoinBySymbol,
-  getCoinByPrice,
-  getCoinByPriceChange1h,
-  getCoinByPriceChange24h,
-  getCoinByPriceChange7d,
+  getTopBooks,
+  getById,
+  getByCategory,
 };

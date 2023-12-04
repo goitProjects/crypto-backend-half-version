@@ -20,20 +20,11 @@
       "description": "Coins-back info endpoints"
     }
   ],
-  //# напиши свагер для router.get("/", getFullOverview);
-
-  //router.get("/name", getCoinByName);
-  //router.get("/symbol", getCoinBySymbol);
-  //router.get("/price", getCoinByPrice);
-  //router.get("/priceChange1h", getCoinByPriceChange1h);
-  //router.get("/priceChange24h", getCoinByPriceChange24h);
-  //router.get("/priceChange7d", getCoinByPriceChange7d);
-
   "paths": {
     "/coins/": {
       "get": {
         "tags": ["Coins"],
-        "summary": "returns a list of categories",
+        "summary": "",
         "parameters": [],
         "responses": {
           "200": {
@@ -57,7 +48,7 @@
         }
       }
     },
-    "/coins/": {
+    "/coins/sss": {
       "get": {
         "tags": ["Coins"],
         "summary": "will receive the first 5 coins from the collection in each category",
