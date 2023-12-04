@@ -9,7 +9,7 @@ const cryptoImageSchema = new mongoose.Schema(
   { _id: false }
 );
 
-const cryptocurrencySchema = new mongoose.Schema({
+const coinsSchema = new mongoose.Schema({
   id: { type: String, required: true },
   symbol: { type: String, required: true },
   name: { type: String, required: true },
@@ -28,6 +28,6 @@ const cryptocurrencySchema = new mongoose.Schema({
   circulating_supply: { type: String, required: false },
 });
 
-const Cryptocurrency = mongoose.model("Cryptocurrency", cryptocurrencySchema);
+const Coins = mongoose.model("Coins", coinsSchema);
 
-module.exports = Cryptocurrency;
+module.exports = Coins;
