@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const checkCache = require("./middleware/checkLastDataCripto");
 const swaggerUi = require("swagger-ui-express");
 require("dotenv").config();
 
@@ -19,6 +20,8 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 app.use(express.json());
+app.use(checkCache);
+
 app.use("/coins", router);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
