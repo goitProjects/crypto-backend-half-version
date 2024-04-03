@@ -90,6 +90,6 @@ module.exports = {
   getCoinByPrice,
   getCoinByPriceChange1h,
   getCoinByPriceChange24h,
-  getCoinByPriceChange7d,getCoinList,
+  getCoinByPriceChange7d,
 };
 // categoryList,getTopBooks,getById, getByCategory,
