@@ -2,10 +2,25 @@ const Coins = require("../models/crypto");
 const axios = require("axios");
 const url = "https://api.coingecko.com/api/v3/coins/markets";
 
+const axiosRetry = require('axios-retry');
+
+// Создание экземпляра axios с настройками повторных попыток
+const axiosInstance = axios.create();
+axiosRetry(axiosInstance, {
+  retries: 3, // Количество повторных попыток
+  retryDelay: axiosRetry.exponentialDelay, // Экспоненциальная задержка между попытками
+  retryCondition: (error) => {
+    // Только для ошибки с кодом 429
+    return error.response && error.response.status === 429;
+  },
+});
+
 let cachedData = new Date();
 
 const getFullOverview = async () => {
-  const data = await axios.get(`${url}`, {
+
+  const data = await axiosInstance.get(`${url}`, {
+
     params: {
       vs_currency: "usd",
       order: "market_cap_desc",

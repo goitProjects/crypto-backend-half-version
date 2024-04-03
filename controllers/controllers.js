@@ -4,6 +4,7 @@ const {getSortParameter, handleCoinQuery} = require("../helper");
 
 //написати запит на пошук по назві монети
 const getCoinByName = async (req, res) => {
+
   const name = req.params.name;
 
   if (!name) {
@@ -12,7 +13,9 @@ const getCoinByName = async (req, res) => {
       message: "name not sent",
     });
   }
+
   const result = await Coins.find({name: new RegExp(name, "i")});
+
   if (!result) {
     return res.status(400).json({
       success: false,
@@ -51,7 +54,9 @@ const getCoinByPrice = async (req, res) => {
   };
 
   const errorMessage = "Not found coin with this price";
+
   const response = await handleCoinQuery(sortCriteria, errorMessage, req);
+
   res.status(response.status).json(response.body);
 };
 
@@ -60,7 +65,9 @@ const getCoinByPriceChange1h = async (req, res) => {
     price_change_percentage_1h_in_currency: getSortParameter(req),
   };
   const errorMessage = "Not found coin with this price change";
+
   const response = await handleCoinQuery(sortCriteria, errorMessage, req);
+
   res.status(response.status).json(response.body);
 };
 
@@ -69,7 +76,9 @@ const getCoinByPriceChange24h = async (req, res) => {
     price_change_percentage_24h_in_currency: getSortParameter(req),
   };
   const errorMessage = "Not found coin with this price change";
+
   const response = await handleCoinQuery(sortCriteria, errorMessage, req);
+
   res.status(response.status).json(response.body);
 };
 
@@ -78,7 +87,9 @@ const getCoinByPriceChange7d = async (req, res) => {
     price_change_percentage_7d_in_currency: getSortParameter(req),
   };
   const errorMessage = "Not found coin with this price";
+
   const response = await handleCoinQuery(sortCriteria, errorMessage, req);
+
   res.status(response.status).json(response.body);
 };
 
