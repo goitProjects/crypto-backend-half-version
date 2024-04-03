@@ -6,9 +6,9 @@ const {
   getCoinByPrice,
   getCoinByPriceChange1h,
   getCoinByPriceChange24h,
-  getCoinByPriceChange7d,
+  getCoinByPriceChange7d,getCoinList,
 } = require("../controllers/controllers");
-
+router.get("/list", getCoinList);
 router.get("/name/:name", getCoinByName);
 router.get("/symbol/:symbol", getCoinBySymbol);
 router.get("/price/:sortOrder", getCoinByPrice);
