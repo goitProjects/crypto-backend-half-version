@@ -1,31 +1,34 @@
 const mongoose = require("mongoose");
 
-const cryptoImageSchema = new mongoose.Schema(
-  {
-    thumb: String,
-    small: String,
-    large: String,
-  },
-  { _id: false }
-);
-
 const coinsSchema = new mongoose.Schema({
-  id: { type: String, required: true },
-  symbol: { type: String, required: true },
-  name: { type: String, required: true },
-  block_time_in_minutes: { type: String, required: false },
-  image: cryptoImageSchema,
-  latest_price: { type: Number, required: false },
-  latest_arithmetic: { type: Number, required: false },
-  latest_geometric: { type: Number, required: false },
-  latest_harmonic: { type: Number, required: false },
-  price_change_24h_in_percentage: { type: Number, required: false },
-  total_supply: { type: Number, required: false },
-  market_cap: { type: Number, required: false },
-  total_volume: { type: Number, required: false },
-  market_cap_change_24h: { type: Number, required: false },
-  market_cap_change_percentage_24h: { type: Number, required: false },
-  circulating_supply: { type: String, required: false },
+  id: String,
+  symbol: String,
+  name: String,
+  image: String,
+  current_price: Number,
+  market_cap: Number,
+  market_cap_rank: Number,
+  fully_diluted_valuation: Number,
+  total_volume: Number,
+  high_24h: Number,
+  low_24h: Number,
+  price_change_24h: Number,
+  price_change_percentage_24h: Number,
+  market_cap_change_24h: Number,
+  market_cap_change_percentage_24h: Number,
+  circulating_supply: Number,
+  total_supply: Number,
+  max_supply: Number,
+  ath: Number,
+  ath_change_percentage: Number,
+  ath_date: Date,
+  atl: Number,
+  atl_change_percentage: Number,
+  atl_date: Date,
+  last_updated: Date,
+  price_change_percentage_1h_in_currency: Number,
+  price_change_percentage_24h_in_currency: Number,
+  price_change_percentage_7d_in_currency: Number,
 });
 
 const Coins = mongoose.model("Coins", coinsSchema);
