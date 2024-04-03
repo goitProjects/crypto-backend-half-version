@@ -17,7 +17,7 @@ axiosRetry(axiosInstance, {
 let cachedData = new Date();
 
 const getFullOverview = async () => {
-  const data = await axios.get(`${url}`, {
+  const data = await axiosInstance.get(`${url}`, {
     params: {
       vs_currency: "usd",
       order: "market_cap_desc",
