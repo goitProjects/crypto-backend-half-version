@@ -2,8 +2,10 @@ const Coins = require("../models/crypto");
 
 const { getSortParameter, handleCoinQuery } = require("../helper");
 
+
 //написати запит на пошук по назві монети
 const getCoinByName = async (req, res) => {
+  
   const name = req.params.name;
 
   if (!name) {
@@ -88,6 +90,6 @@ module.exports = {
   getCoinByPrice,
   getCoinByPriceChange1h,
   getCoinByPriceChange24h,
-  getCoinByPriceChange7d,
+  getCoinByPriceChange7d,getCoinList,
 };
 // categoryList,getTopBooks,getById, getByCategory,
