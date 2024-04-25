@@ -11,10 +11,10 @@
   },
   "servers": [
     {
-      "url": "http://localhost:3007/"
+      "url": "http://crypto-backend.p.goit.global/"
     },
     {
-      "url": "http://crypto-backend.p.goit.global/"
+      "url": "http://localhost:3007/"
     }
   ],
   "tags": [
