@@ -11,37 +11,64 @@
   },
   "servers": [
     {
-      "url": "https://coins-backend.p.goit.global/"
+      "url": "http://localhost:3007/"
     },
     {
-      "url": "http://localhost:3007/"
+      "url": "http://crypto-backend.p.goit.global/"
     }
   ],
   "tags": [
     {
       "name": "Coins",
-      "description": "Coins-back info endpoints"
+      "description": "Back-end endpoints for coin information"
+    },
+    {
+      "name": "News",
+      "description": "Endpoints related to news articles"
     }
   ],
   "paths": {
-    "/coins/name/{coinName}": {
+    "/api/coins/all": {
       "get": {
-        "tags": [
-          "Coins"
-        ],
-        "summary": "Получает информацию о монете по её имени",
-        "description": "Возвращает данные о монете, основываясь на переданном имени монеты.",
+        "tags": ["Coins"],
+        "summary": "Retrieve all coins",
+        "description": "Returns an array of all cryptocurrency coins available in the database.",
+        "responses": {
+          "200": {
+            "description": "A list of coins",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CoinsArray"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No coins found"
+          },
+          "500": {
+            "description": "Server error occurred while retrieving coins"
+          }
+        }
+      }
+    },
+    "/api/coins/name/{coinName}": {
+      "get": {
+        "tags": ["Coins"],
+        "summary": "Get coin information by name",
+        "description": "Returns coin data based on the provided coin name.",
         "parameters": [
           {
             "name": "coinName",
             "in": "path",
             "required": true,
-            "description": "Имя монеты для поиска"
+            "description": "Name of the coin to search for"
           }
         ],
         "responses": {
           "200": {
-            "description": "Успешный ответ",
+            "description": "Successful response",
             "content": {
               "application/json": {
                 "schema": {
@@ -51,32 +78,30 @@
             }
           },
           "400": {
-            "description": "Неверный запрос (например, отсутствует имя монеты)"
+            "description": "Bad request (e.g., missing coin name)"
           },
           "404": {
-            "description": "Монета не найдена"
+            "description": "Coin not found"
           }
         }
       }
     },
-    "/coins/symbol/{symbol}": {
+    "/api/coins/symbol/{symbol}": {
       "get": {
-        "tags": [
-          "Coins"
-        ],
-        "summary": "Получает информацию о монете по её имени",
-        "description": "Возвращает данные о монете, основываясь на переданном имени монеты.",
+        "tags": ["Coins"],
+        "summary": "Get coin information by symbol",
+        "description": "Returns coin data based on the provided coin symbol.",
         "parameters": [
           {
-            "name": "coinName",
+            "name": "symbol",
             "in": "path",
             "required": true,
-            "description": "Имя монеты для поиска"
+            "description": "Symbol of the coin to search for"
           }
         ],
         "responses": {
           "200": {
-            "description": "Успешный ответ",
+            "description": "Successful response",
             "content": {
               "application/json": {
                 "schema": {
@@ -86,33 +111,28 @@
             }
           },
           "400": {
-            "description": "Неверный запрос (например, отсутствует имя монеты)"
+            "description": "Bad request (e.g., missing coin symbol)"
           },
           "404": {
-            "description": "Монета не найдена"
+            "description": "Coin not found"
           }
         }
       }
     },
-    "/coins/price/{sortOrder}": {
+    "/api/coins/price/{sortOrder}": {
       "get": {
-        "tags": [
-          "Coins"
-        ],
-        "summary": "Получает список монет с сортировкой по цене",
-        "description": "Возвращает список монет, отсортированных по цене в порядке, указанном в параметре.",
+        "tags": ["Coins"],
+        "summary": "Get list of coins sorted by price",
+        "description": "Returns a list of coins sorted by price in the order specified by the parameter.",
         "parameters": [
           {
             "name": "sortOrder",
             "in": "path",
             "required": true,
-            "description": "Порядок сортировки: ASC для возрастания или DESC для убывания",
+            "description": "Sort order: ASC for ascending or DESC for descending",
             "schema": {
               "type": "string",
-              "enum": [
-                "ASC",
-                "DESC"
-              ],
+              "enum": ["ASC", "DESC"],
               "default": "ASC"
             }
           },
@@ -135,7 +155,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Успешный ответ с отсортированным списком монет",
+            "description": "Successful response with a sorted list of coins",
             "content": {
               "application/json": {
                 "schema": {
@@ -145,33 +165,28 @@
             }
           },
           "400": {
-            "description": "Неверный запрос, например, неправильное значение сортировки"
+            "description": "Bad request, for example, incorrect sort value"
           },
           "404": {
-            "description": "Монеты не найдены"
+            "description": "Coins not found"
           }
         }
       }
     },
-    "/coins/price_change_percentage_1h_in_currency/{sortOrder}": {
+    "/api/coins/priceChange1h/{sortOrder}": {
       "get": {
-        "tags": [
-          "Coins"
-        ],
-        "summary": "Получает список монет с сортировкой по цене % за последний час",
-        "description": "Возвращает список монет, отсортированных по цене в порядке, указанном в параметре.",
+        "tags": ["Coins"],
+        "summary": "Get a list of coins sorted by the percentage price change over the last hour",
+        "description": "Returns a list of coins sorted by percentage price change in the order specified by the parameter.",
         "parameters": [
           {
             "name": "sortOrder",
             "in": "path",
             "required": true,
-            "description": "Порядок сортировки: ASC для возрастания или DESC для убывания",
+            "description": "The sort order: ASC for ascending or DESC for descending",
             "schema": {
               "type": "string",
-              "enum": [
-                "ASC",
-                "DESC"
-              ],
+              "enum": ["ASC", "DESC"],
               "default": "ASC"
             }
           },
@@ -194,7 +209,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Успешный ответ с отсортированным списком монет",
+            "description": "Successful response with a sorted list of coins",
             "content": {
               "application/json": {
                 "schema": {
@@ -204,33 +219,28 @@
             }
           },
           "400": {
-            "description": "Неверный запрос, например, неправильное значение сортировки"
+            "description": "Bad request, for example, incorrect sorting value"
           },
           "404": {
-            "description": "Монеты не найдены"
+            "description": "Coins not found"
           }
         }
       }
     },
-    "/coins/price_change_percentage_24h_in_currency/{sortOrder}": {
+    "/api/coins/priceChange24h/{sortOrder}": {
       "get": {
-        "tags": [
-          "Coins"
-        ],
-        "summary": "Получает список монет с сортировкой по цене в % за 24 часа",
-        "description": "Возвращает список монет, отсортированных по цене в порядке, указанном в параметре.",
+        "tags": ["Coins"],
+        "summary": "Get a list of coins sorted by the percentage price change over the last 24 hours",
+        "description": "Returns a list of coins sorted by percentage price change in the order specified by the parameter.",
         "parameters": [
           {
             "name": "sortOrder",
             "in": "path",
             "required": true,
-            "description": "Порядок сортировки: ASC для возрастания или DESC для убывания",
+            "description": "The sort order: ASC for ascending or DESC for descending",
             "schema": {
               "type": "string",
-              "enum": [
-                "ASC",
-                "DESC"
-              ],
+              "enum": ["ASC", "DESC"],
               "default": "ASC"
             }
           },
@@ -253,7 +263,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Успешный ответ с отсортированным списком монет",
+            "description": "Successful response with a sorted list of coins",
             "content": {
               "application/json": {
                 "schema": {
@@ -263,33 +273,28 @@
             }
           },
           "400": {
-            "description": "Неверный запрос, например, неправильное значение сортировки"
+            "description": "Bad request, for example, incorrect sorting value"
           },
           "404": {
-            "description": "Монеты не найдены"
+            "description": "Coins not found"
           }
         }
       }
     },
-    "/coins/price_change_percentage_7d_in_currency/{sortOrder}": {
+    "/api/coins/priceChange7d/{sortOrder}": {
       "get": {
-        "tags": [
-          "Coins"
-        ],
-        "summary": "Получает список монет с сортировкой по цене  в % за 7дней",
-        "description": "Возвращает список монет, отсортированных по цене в порядке, указанном в параметре.",
+        "tags": ["Coins"],
+        "summary": "Get a list of coins sorted by the percentage price change over the last 7 days",
+        "description": "Returns a list of coins sorted by percentage price change in the order specified by the parameter.",
         "parameters": [
           {
             "name": "sortOrder",
             "in": "path",
             "required": true,
-            "description": "Порядок сортировки: ASC для возрастания или DESC для убывания",
+            "description": "The sort order: ASC for ascending or DESC for descending",
             "schema": {
               "type": "string",
-              "enum": [
-                "ASC",
-                "DESC"
-              ],
+              "enum": ["ASC", "DESC"],
               "default": "ASC"
             }
           },
@@ -312,7 +317,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Успешный ответ с отсортированным списком монет",
+            "description": "Successful response with a sorted list of coins",
             "content": {
               "application/json": {
                 "schema": {
@@ -322,10 +327,35 @@
             }
           },
           "400": {
-            "description": "Неверный запрос, например, неправильное значение сортировки"
+            "description": "Bad request, for example, incorrect sorting value"
           },
           "404": {
-            "description": "Монеты не найдены"
+            "description": "Coins not found"
+          }
+        }
+      }
+    },
+    "/api/news/all": {
+      "get": {
+        "tags": ["News"],
+        "summary": "Retrieve all news articles",
+        "description": "Returns an array of all news articles available in the database.",
+        "responses": {
+          "200": {
+            "description": "A list of news articles",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NewsArray"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No news articles found"
+          },
+          "500": {
+            "description": "Server error occurred while retrieving news articles"
           }
         }
       }
@@ -354,7 +384,7 @@
           },
           "image": {
             "type": "string",
-            "example": "https://assets.coingecko.com/coins/images/325/large/Tether.png?1696501661"
+            "example": "https://assets.coingecko.comapi/coins/images/325/large/Tether.png?1696501661"
           },
           "current_price": {
             "type": "number",
@@ -463,6 +493,29 @@
         "type": "array",
         "items": {
           "$ref": "#/components/schemas/Coin"
+        }
+      },
+      "NewsArticle": {
+        "type": "object",
+        "properties": {
+          "image": {
+            "type": "string",
+            "example": "https://res.cloudinary.com/dxgv5a6mt/image/upload/v1712050609/Cryptozen/qp94eqn1jomyx336c72y.jpg"
+          },
+          "title": {
+            "type": "string",
+            "example": "Bitcoin Mining"
+          },
+          "text": {
+            "type": "string",
+            "example": "Dive into the world of decentralized ledger technology and learn how Bitcoin mining is reshaping the future of financial transactions."
+          }
+        }
+      },
+      "NewsArray": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/NewsArticle"
         }
       }
     }

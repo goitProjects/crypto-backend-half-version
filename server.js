@@ -5,7 +5,8 @@ const checkCache = require("./middleware/checkLastDataCripto");
 const swaggerUi = require("swagger-ui-express");
 require("dotenv").config();
 
-const router = require("./routers/routers");
+const routerCoins = require("./routers/coins");
+const routerNews = require("./routers/news");
 
 const { PORT, DB_HOST } = process.env;
 
@@ -22,7 +23,8 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(checkCache);
 
-app.use("/coins", router);
+app.use("/api/coins", routerCoins);
+app.use("/api/news", routerNews);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use((req, res) => {

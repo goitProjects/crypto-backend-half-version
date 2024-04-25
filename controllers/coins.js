@@ -1,10 +1,26 @@
-const Coins = require("../models/crypto");
+const Coins = require("../models/coins");
 
-const {getSortParameter, handleCoinQuery} = require("../helper");
+const { getSortParameter, handleCoinQuery } = require("../helper");
 
-//написати запит на пошук по назві монети
+const getAllCoins = async (req, res) => {
+  try {
+    const coins = await Coins.find({});
+    if (!coins.length) {
+      return res.status(404).json({
+        success: false,
+        message: "No coins found in the database",
+      });
+    }
+    res.json(coins);
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "An error occurred while retrieving the coins",
+    });
+  }
+};
+
 const getCoinByName = async (req, res) => {
-
   const name = req.params.name;
 
   if (!name) {
@@ -14,7 +30,7 @@ const getCoinByName = async (req, res) => {
     });
   }
 
-  const result = await Coins.find({name: new RegExp(name, "i")});
+  const result = await Coins.find({ name: new RegExp(name, "i") });
 
   if (!result) {
     return res.status(400).json({
@@ -25,9 +41,8 @@ const getCoinByName = async (req, res) => {
   res.send(result);
 };
 
-//написати запит на пошук по символу маонети
 const getCoinBySymbol = async (req, res) => {
-  const {symbol} = req.params;
+  const { symbol } = req.params;
   if (!symbol) {
     return res.status(400).json({
       success: false,
@@ -35,7 +50,7 @@ const getCoinBySymbol = async (req, res) => {
     });
   }
   const result = await Coins.find({
-    symbol: {$regex: symbol, $options: "i"},
+    symbol: { $regex: symbol, $options: "i" },
   });
   if (!result) {
     return res.status(400).json({
@@ -45,8 +60,6 @@ const getCoinBySymbol = async (req, res) => {
   }
   res.send(result);
 };
-
-//написати запит сотрування по ціні від більшого до меньшого
 
 const getCoinByPrice = async (req, res) => {
   const sortCriteria = {
@@ -94,6 +107,7 @@ const getCoinByPriceChange7d = async (req, res) => {
 };
 
 module.exports = {
+  getAllCoins,
   getCoinByName,
   getCoinBySymbol,
   getCoinByPrice,
@@ -101,4 +115,3 @@ module.exports = {
   getCoinByPriceChange24h,
   getCoinByPriceChange7d,
 };
-// categoryList,getTopBooks,getById, getByCategory,

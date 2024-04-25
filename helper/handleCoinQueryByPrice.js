@@ -1,5 +1,4 @@
-const Coins = require("../models/crypto");
-
+const Coins = require("../models/coins");
 
 async function handleCoinQueryByPrice(sortCriteria, errorMessage, req) {
   const { pageNumber, pageSize } = req.query;
@@ -10,7 +9,6 @@ async function handleCoinQueryByPrice(sortCriteria, errorMessage, req) {
       .sort(sortCriteria)
       .skip(skip)
       .limit(pageSize);
-
 
     if (!result) {
       return {

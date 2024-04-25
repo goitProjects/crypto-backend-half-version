@@ -1,14 +1,16 @@
 const router = require("express").Router();
 
 const {
+  getAllCoins,
   getCoinByName,
   getCoinBySymbol,
   getCoinByPrice,
   getCoinByPriceChange1h,
   getCoinByPriceChange24h,
   getCoinByPriceChange7d,
-} = require("../controllers/controllers");
+} = require("../controllers/coins");
 
+router.get("/all", getAllCoins);
 router.get("/name/:name", getCoinByName);
 router.get("/symbol/:symbol", getCoinBySymbol);
 router.get("/price/:sortOrder", getCoinByPrice);
