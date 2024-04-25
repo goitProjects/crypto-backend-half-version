@@ -8,7 +8,7 @@ This project is a backend service for a cryptocurrency information platform, off
 
 1. Clone the repository:
    ```
-   git clone [repository URL](https://github.com/NadyaHristuk/crypto-backend)
+   git clone https://github.com/NadyaHristuk/crypto-backend
    ```
 2. Install dependencies:
    ```
