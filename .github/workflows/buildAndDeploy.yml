@@ -1,0 +1,99 @@
+name: Deploy backend service 
+
+on:
+    push:
+        branches:
+          - main
+
+jobs:
+  build-backend-service:
+    runs-on: ubuntu-latest
+# оголошуємо всі змінні 
+    env:
+        #глобальні змінні організації
+        SERVER_IP: ${{secrets.SERVER_IP}}
+        SERVER_USER: ${{secrets.SERVER_USER}}
+        AUTH_HOSTING_TOKEN: ${{secrets.AUTH_HOSTING_TOKEN}}
+        DOMAIN_ID: ${{secrets.DOMAIN_ID}}
+        SSH_PRIVATE_KEY: ${{secrets.SSH_PRIVATE_KEY}}
+        PROJECT_FOLDER: "cryptohub-half"
+        SUBDOMAIN: "cryptohub-half.b"
+        FULL_SUBDOMAIN: "cryptohub-half.b.goit.study"
+        PORT: "3025"
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Setup php
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '7.4'
+
+    - name: Add Domain Record
+      run: php -e scripts/addDomainRecord.php $SUBDOMAIN $SERVER_IP $AUTH_HOSTING_TOKEN $DOMAIN_ID
+
+    - name: Create folder on remote server
+      run: |
+        echo "${{secrets.SSH_PRIVATE_KEY}}" > key.pem
+        chmod 600 key.pem
+        mkdir -p $HOME/.ssh && ssh-keyscan -H $SERVER_IP >> $HOME/.ssh/known_hosts
+        ssh -i key.pem $SERVER_USER@$SERVER_IP "mkdir -p /$SERVER_USER/$PROJECT_FOLDER"
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '18'
+
+    - name: Create .env and run install
+      uses: actions/checkout@v2
+    - run: |
+        echo "
+        PORT=$PORT
+        DB_HOST=${{secrets.DB_HOST}}" > .env
+        ls -la
+        npm install --force
+        echo "${{secrets.SSH_PRIVATE_KEY}}" > key.pem
+        chmod 600 key.pem
+        mkdir -p $HOME/.ssh && ssh-keyscan -H $SERVER_IP >> $HOME/.ssh/known_hosts
+        ssh -i key.pem $SERVER_USER@$SERVER_IP "mkdir -p /$SERVER_USER/$PROJECT_FOLDER"
+        rsync -rav -e "ssh -i key.pem" --delete-after --exclude=node_modules/ ./ $SERVER_USER@$SERVER_IP:/$SERVER_USER/$PROJECT_FOLDER/
+        
+    - name: Create serivce files
+      uses: actions/checkout@v2
+    - run: |
+            echo "${{ secrets.SSH_PRIVATE_KEY }}" > key.pem
+            chmod 600 key.pem
+            mkdir -p $HOME/.ssh && ssh-keyscan -H $SERVER_IP >> $HOME/.ssh/known_hosts
+            ssh -i key.pem $SERVER_USER@$SERVER_IP "cd /$SERVER_USER/backendScripts && node createBackendServices.js $PROJECT_FOLDER"
+            ssh -i key.pem $SERVER_USER@$SERVER_IP "cp /$SERVER_USER/backendScripts/$PROJECT_FOLDER.service /etc/systemd/system/ && systemctl enable $PROJECT_FOLDER.service && systemctl start $PROJECT_FOLDER.service"
+            ssh -i key.pem $SERVER_USER@$SERVER_IP "cp /$SERVER_USER/backendScripts/$PROJECT_FOLDER-watcher.service /etc/systemd/system/ && systemctl enable $PROJECT_FOLDER-watcher.service && systemctl start $PROJECT_FOLDER-watcher.service"
+            ssh -i key.pem $SERVER_USER@$SERVER_IP "cp /$SERVER_USER/backendScripts/$PROJECT_FOLDER-watcher.path /etc/systemd/system/ && systemctl enable $PROJECT_FOLDER-watcher.path && systemctl start $PROJECT_FOLDER-watcher.path"
+
+    - name: Create Nginx conf
+      uses: actions/checkout@v2
+    - run: |
+            echo "${{ secrets.SSH_PRIVATE_KEY }}" > key.pem
+            chmod 600 key.pem
+            mkdir -p $HOME/.ssh && ssh-keyscan -H $SERVER_IP >> $HOME/.ssh/known_hosts
+        
+            # Перевірка, чи файл конфігурації вже існує у /etc/nginx/conf.d
+            if ssh -i key.pem $SERVER_USER@$SERVER_IP "test -f /etc/nginx/conf.d/$FULL_SUBDOMAIN.conf"; then
+              echo "Config file already exists in /etc/nginx/conf.d"
+            else
+              # Якщо файлу немає, створюємо його
+              ssh -i key.pem $SERVER_USER@$SERVER_IP "cd /$SERVER_USER/backendScripts && node createNginxConf.js $FULL_SUBDOMAIN $PORT"
+              ssh -i key.pem $SERVER_USER@$SERVER_IP "cp /$SERVER_USER/backendScripts/$FULL_SUBDOMAIN.conf /etc/nginx/conf.d"
+              ssh -i key.pem $SERVER_USER@$SERVER_IP "nginx -t && nginx -s reload"
+            fi
+        
+            # Перевірка, чи файл SSL-сертифіката вже існує
+            if ssh -i key.pem $SERVER_USER@$SERVER_IP "test -f /etc/letsencrypt/live/$FULL_SUBDOMAIN/fullchain.pem"; then
+              echo "SSL certificate already exists"
+            else
+              # Якщо сертифікату немає, викликаємо Certbot для налаштування SSL
+              sleep 60
+              ssh -i key.pem $SERVER_USER@$SERVER_IP "certbot --nginx -d $FULL_SUBDOMAIN"
+            fi
+  
+        
