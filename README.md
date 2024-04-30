@@ -1,6 +1,6 @@
 # Crypto Backend
 
-[api-url](https://cryptohub-half.b.goit.study)
+[api-url](https://cryptohub-half.b.goit.study/api-docs)
 ## Description
 
 This project is a backend service for a cryptocurrency information platform, offering API endpoints for fetching real-time data on various cryptocurrencies and related news articles. Built with Node.js, this server is designed to integrate with front-end applications to provide users with the latest crypto market updates and news.
